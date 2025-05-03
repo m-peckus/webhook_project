@@ -8,7 +8,13 @@ This project demonstrates how to set up and securely handle Stripe webhooks usin
 - Secure signature verification using Stripe SDK
 - Stripe CLI integration for event simulation
 - Example of event data consumption logic
-- Fully tested locally and confirmed via Stripe Dashboard
+- Fully tested locally and confirmed via Stripe Dashboard 
+
+## Preview  
+
+Here's an example of a successfully received webhook event in the Stripe Dashboard:  
+
+![Webhook event demo](assets/webhook-event-demo.png)
 
 ## How to Use
 
