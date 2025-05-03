@@ -2,7 +2,7 @@
 
 import os
 import stripe
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 from dotenv import load_dotenv
 
 # Load keys from .env file
@@ -10,6 +10,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 @app.route("/webhook", methods=["POST"])
@@ -23,14 +24,12 @@ def stripe_webhook():
             payload, sig_header, endpoint_secret
         )
     except stripe.error.SignatureVerificationError:
-        return 'Signature verification failed.', 400
-    except Exception as e:
-        return f'Webhook error: {str(e)}', 400
+        abort(400, "Invalid signature")
+    
 
     # Handle the event (only verified)
-    if event['type'] == 'checkout.session.completed':
-        print("Payment completed!")
+    if event['type'] == 'payment_intent.succeeded':
+        print("Payment succeeded!")
+
     return jsonify(success=True)
 
-if __name__ == "__main__":
-    app.run(port=5000, debug=True)
